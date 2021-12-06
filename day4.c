@@ -11,17 +11,16 @@ typedef struct BingoCard {
   bool marked[5][5];
 } BingoCard;
 
-char * consume_bingo_card(BingoCard * card, char * stream){
+void consume_bingo_card(BingoCard * card, char ** stream){
   int num;
   for(int line=0; line < 5; line++){
     for(int col=0; col < 5; col++){
-      ignore_until_digit(&stream);
-      consume_int(&num, &stream);
+      ignore_until_digit(stream);
+      consume_int(&num, stream);
       card->numbers[line][col] = num;
       card->marked[line][col] = false;
     }
   }
-  return stream;
 }
 
 bool is_winner_card(BingoCard * card){
@@ -80,7 +79,7 @@ int main(){
   int total_cards = 0;
   BingoCard * cards = alloc(sizeof(BingoCard) * MAX_BINGO_CARDS);
   while(*input != '\0'){
-    input = consume_bingo_card(&cards[total_cards], input);
+    consume_bingo_card(&cards[total_cards], &input);
     total_cards++;
   }
 
